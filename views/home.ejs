@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="outer-container">
+        <div class="center">
+            <img src="assets/tic-tac-toe.png">
+        </div>
+        <div class="center">
+            <h2> Join or your create room </h2>
+        </div>
+        <div class="center">
+        <form action="/room" method="POST" >
+            <label for="room"> <b>Room Code:</b> </label>
+            <input type="text" name="room" autocomplete="off" class="custom-input" required>
+            <button class="btn" type="submit"> <b>Create</b> </button>
+        </form>
+        </div>
+    </div>
+</body>
+</html>

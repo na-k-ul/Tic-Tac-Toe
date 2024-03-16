@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="outer-container" id="outer">
+        <div class="nav-bar">
+            <div>
+                <p id="room" class="hide"><%= inputRoom %></p>
+            </div>
+            <div id="para">
+                <p id="player-1" style="color: red; font-size: large;">Red - 0</p>
+                <div class="inside-win">
+                    <p id="win"></p>
+                </div>
+                <p id="player-2" style="color: blue; font-size: large;">Blue - 0</p>
+            </div>           
+        </div>
+        <br>
+        <div class="container">
+            <div class="box-1" onclick="mark('box-1')">
+                <div id="box-1"></div>
+            </div>
+            <div class="box-2"  onclick="mark('box-2')">
+                <div id="box-2"></div>
+            </div>
+            <div class="box-3" onclick="mark('box-3')">
+                <div id="box-3"></div>
+            </div>
+            <div class="box-4" onclick="mark('box-4')">
+                <div id="box-4"></div>
+            </div>
+            <div class="box-5" onclick="mark('box-5')">
+                <div id="box-5"></div>
+            </div>
+            <div class="box-6" onclick="mark('box-6')">
+                <div id="box-6"></div>
+            </div>
+            <div class="box-7" onclick="mark('box-7')">
+                <div id="box-7"></div>
+            </div>
+            <div class="box-8" onclick="mark('box-8')">
+                <div id="box-8"></div>
+            </div>
+            <div class="box-9" onclick="mark('box-9')">
+                <div id="box-9"></div>
+            </div>
+        </div>
+    </div>
+    <div class="center">
+        <p id="wait-3" class='hide wait-page'>More than 2 people are using your room code...please restart with a unique code</p>
+        <p id="wait-2" class='hide wait-page custom-input '> Waiting for friend to join... <br><br> Room Code: <%= inputRoom %> </p>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var room = document.getElementById('room').innerText;
+        var y, blue = 0, red = 0, z = 1, x = 1, count = 0;
+        var cname = "";
+        const socket = io();
+        socket.emit("join-room", room);
+
+        function mark(idName){
+            socket.emit("clicked", idName, room);
+
+        }
+
+        function restrt(){
+            socket.emit("restrtfunc", room);
+        }
+
+        socket.on("re-game", (room) => {
+            z = 1;
+            for(var i = 1; i < 10; i++){
+                y = document.getElementById("box-" + i);
+                y.classList.remove("tic-X");
+                y.innerHTML = "";
+                y.classList.remove("tic-O");
+            }
+            document.getElementById("win").innerHTML = "";
+            document.getElementById("room").innerText = "<%= inputRoom %>";
+        });
+
+        socket.on("checkSize", (num,name) => {
+            cname = name;
+            if(num === 2){
+                document.getElementById("outer").classList.remove("hide");
+                document.getElementById("wait-2").classList.add("hide");
+                document.getElementById("wait-3").classList.add("hide");
+                document.getElementById("room").innerText = `Start`;
+            }else if(num > 2){
+                document.getElementById("outer").classList.add("hide");
+                document.getElementById("wait-2").classList.add("hide");
+                document.getElementById("wait-3").classList.remove("hide");
+            }else{
+                document.getElementById("outer").classList.add("hide");
+                document.getElementById("wait-3").classList.add("hide");
+                document.getElementById("wait-2").classList.remove("hide");
+            }    
+        });
+
+        socket.on("performTask", (idName, current) => {  
+            if(z){
+                if(cname === current){
+                    if(x === 1){
+                        y = document.getElementById(idName);
+                        if(!y.classList.contains('tic-O')){
+                            x = 0;
+                            count = count + 1;
+                            console.log(count);
+                            y.innerHTML = "<img class='size' src='assets/close.png'>"
+                            y.classList.add("tic-X");
+                        }  
+                    }                
+                }else{
+                    if(x === 0){
+                        y = document.getElementById(idName);
+                        if(!y.classList.contains('tic-X')){
+                            x = 1;
+                            count = count + 1;
+                            console.log(count);
+                            y.classList.add("tic-O");
+                        }
+                    } 
+                }
+            }
+
+            for(var i = 1; i<8; i=i+3){
+                if(document.getElementById("box-"+i).classList.contains('tic-O')  &&  document.getElementById("box-"+(i+1)).classList.contains('tic-O')  &&  document.getElementById("box-"+(i+2)).classList.contains('tic-O')){
+                    document.getElementById("win").innerHTML = "<p style = 'font-size: x-large; color: blue;' > <b>Blue Wins</b> - <button class='btn' onclick='restrt()'> <b> Play Again </b> </button>  </p>";
+                    blue = blue + 1;
+                    document.getElementById("player-2").innerText = "Blue - " + blue;
+                    document.getElementById("room").innerText = ``;
+                    z = 0;
+                    count = 0;
+                }
+                else if(document.getElementById("box-"+i).classList.contains('tic-X')  &&  document.getElementById("box-"+(i+1)).classList.contains('tic-X')  &&  document.getElementById("box-"+(i+2)).classList.contains('tic-X')){
+                    document.getElementById("win").innerHTML = "<p style = 'font-size: x-large; color: red;'> <b>Red Wins</b> - <button class='btn' onclick='restrt()'> <b> Play Again </b> </button>  </p>";
+                    red = red + 1;
+                    document.getElementById("player-1").innerText = "Red - " + red;
+                    document.getElementById("room").innerText = ``;
+                    z = 0;
+                    count = 0;
+                }
+            }
+
+            for(var i = 1; i<4; i++){
+                if(document.getElementById("box-"+i).classList.contains('tic-O')  &&  document.getElementById("box-"+(i+3)).classList.contains('tic-O')  &&  document.getElementById("box-"+(i+6)).classList.contains('tic-O')){
+                    document.getElementById("win").innerHTML = "<p style = 'font-size: x-large; color: blue;'> <b>Blue Wins</b> - <button class='btn' onclick='restrt()'> <b> Play Again </b> </button>  </p> <br>";
+                    blue = blue + 1;
+                    document.getElementById("player-2").innerText = "Blue - " + blue;
+                    document.getElementById("room").innerText = ``;
+                    z = 0;
+                    count = 0;
+                }
+                else if(document.getElementById("box-"+i).classList.contains('tic-X')  &&  document.getElementById("box-"+(i+3)).classList.contains('tic-X')  &&  document.getElementById("box-"+(i+6)).classList.contains('tic-X')){
+                    document.getElementById("win").innerHTML = "<p style = 'font-size: x-large; color: red;'> <b>Red Wins</b> - <button class='btn' onclick='restrt()'> <b> Play Again </b> </button>  </p> <br>";
+                    red = red + 1;
+                    document.getElementById("player-1").innerText = "Red - " + red;
+                    document.getElementById("room").innerText = ``;
+                    z = 0;
+                    count = 0;
+                }
+            }
+        
+            if(document.getElementById("box-1").classList.contains('tic-O')  &&  document.getElementById("box-5").classList.contains('tic-O')  &&  document.getElementById("box-9").classList.contains('tic-O')){
+                document.getElementById("win").innerHTML = "<p style = 'font-size: x-large; color: blue;'> <b>Blue Wins</b> - <button class='btn' onclick='restrt()'> <b> Play Again </b> </button>  </p> <br>";
+                blue = blue + 1;
+                document.getElementById("player-2").innerText = "Blue - " + blue;
+                document.getElementById("room").innerText = ``;
+                z = 0;
+                count = 0;
+            }
+            else if(document.getElementById("box-1").classList.contains('tic-X')  &&  document.getElementById("box-5").classList.contains('tic-X')  &&  document.getElementById("box-9").classList.contains('tic-X')){
+                document.getElementById("win").innerHTML = "<p style = 'font-size: x-large; color: red;'> <b>Red Wins</b> - <button class='btn' onclick='restrt()'> <b> Play Again </b> </button>  </p> <br>";
+                red = red + 1;
+                document.getElementById("player-1").innerText = "Red - " + red;
+                document.getElementById("room").innerText = ``;
+                z = 0;
+                count = 0;
+            }
+
+            if(document.getElementById("box-3").classList.contains('tic-O')  &&  document.getElementById("box-5").classList.contains('tic-O')  &&  document.getElementById("box-7").classList.contains('tic-O')){
+                document.getElementById("win").innerHTML = "<p style = 'font-size: x-large; color: blue;'> <b>Blue Wins</b> - <button class='btn' onclick='restrt()'> <b> Play Again </b> </button>  </p> <br>";
+                blue = blue + 1;
+                document.getElementById("player-2").innerText = "Blue - " + blue;
+                document.getElementById("room").innerText = ``;
+                z = 0;
+                count = 0;
+            }
+            else if(document.getElementById("box-3").classList.contains('tic-X')  &&  document.getElementById("box-5").classList.contains('tic-X')  &&  document.getElementById("box-7").classList.contains('tic-X')){
+                document.getElementById("win").innerHTML = "<p style = 'font-size: x-large; color: red;'> <b>Red Wins</b> - <button class='btn' onclick='restrt()'> <b> Play Again </b> </button> </p> <br>";
+                red = red + 1;
+                document.getElementById("player-1").innerText = "Red - " + red;
+                document.getElementById("room").innerText = ``;
+                z = 0;
+                count = 0;
+            }
+            else if(count === 9){
+                z = 0;
+                count = 0;
+                document.getElementById("win").innerHTML = "<p style = 'font-size: x-large; color: grey;'> <b>Draw</b> - <button class='btn' onclick='restrt()'> <b> Play Again </b> </button> </p> <br>";
+                document.getElementById("room").innerText = ``;
+                
+            }
+        });
+    </script>      
+</body>
+</html>

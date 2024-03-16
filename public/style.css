@@ -1,0 +1,152 @@
+body{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 95vh;
+    background-color: #F8F0E5;
+    font-family: "Varela Round", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.outer-container{
+    display: flex;
+    flex-direction: column;
+}
+
+.nav-bar{
+    border-bottom: 1px solid #BBAB8C;
+}
+
+.inside-win{
+    height: 30px;
+}
+
+#para{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.container{
+    display: grid;
+    grid-template-rows: repeat(3, 200px);
+    grid-template-columns: repeat(3, 200px);
+}
+
+.box-1{
+    border-right: 5px solid;
+    border-bottom: 5px solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.box-2{
+    border-right: 5px solid;
+    border-bottom: 5px solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.box-3{
+    border-bottom: 5px solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.box-4{
+    border-right: 5px solid;
+    border-bottom: 5px solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.box-5{
+    border-right: 5px solid;
+    border-bottom: 5px solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.box-6{
+    border-bottom: 5px solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.box-7{
+    border-right: 5px solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.box-8{
+    border-right: 5px solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.box-9{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.size{
+    height: 160px;
+    width:160px;
+    
+}
+
+.tic-O{
+    height: 130px;
+    width: 130px;
+    border: 20px solid blue;
+    border-radius: 50%;
+}
+
+.center{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn{
+    background-color: #EADBC8;
+    border-radius: 10%;
+}
+
+img{
+    height: 200px;
+    width: 200px;
+}
+  
+.wait-page{
+    font-size: xx-large;
+}
+
+.hide{
+    display: none;
+}
+
+.custom-input{
+    font-family: "Varela Round", sans-serif;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+@media(max-width: 640px){
+    .container{
+        display: grid;
+        grid-template-rows: repeat(3, 80px);
+        grid-template-columns: repeat(3, 80px);
+    }
+}
